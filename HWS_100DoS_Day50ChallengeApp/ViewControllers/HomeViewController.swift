@@ -10,10 +10,17 @@ import UIKit
 
 class HomeViewController: UITableViewController {
 
+    // MARK: - Properties
+    var photos = [Photo]()
+
+
+    // MARK: - Lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setUpNavigationBar()
+
+        loadPhotos()
     }
 
     fileprivate func setUpNavigationBar() {
@@ -30,12 +37,30 @@ class HomeViewController: UITableViewController {
     }
 
     // MARK: - Data persistence
-    func save() {
-        #warning("Implement")
+    func savePhotos() {
+        let defaults = UserDefaults.standard
+        let encoder = JSONEncoder()
+
+        if let savedData = try? encoder.encode(photos) {
+            defaults.set(savedData, forKey: "Photos")
+            print("Succeeded to save data")
+        } else {
+            print("Failed to save data")
+        }
     }
 
-    func load() {
-        #warning("Implement")
+    func loadPhotos() {
+        let defaults = UserDefaults.standard
+        let decoder = JSONDecoder()
+
+        if let loadedData = defaults.object(forKey: "Photos") as? Data {
+            if let loadedPhotos = try? decoder.decode([Photo].self, from: loadedData) {
+                print("Succeeded to load pictures")
+                photos = loadedPhotos
+            } else {
+                print("Failed to load photos")
+            }
+        }
     }
 }
 
