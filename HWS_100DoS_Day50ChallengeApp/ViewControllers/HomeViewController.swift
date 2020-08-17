@@ -65,13 +65,25 @@ class HomeViewController: UITableViewController {
 }
 
 // MARK: - ImagePicker methods
-extension HomeViewController: UIImagePickerControllerDelegate {
+extension HomeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         #warning("Implement")
-        // TODO: Save photo to the camera roll
-            // UIImageWriteToSavedPhotosAlbum(_:_:_:_:)
-                // includes parameters for completion block
-                // can use this to trigger the captioning alertVC
+
+        guard let image = info[.originalImage] as? UIImage else { return }
+
+        let imageName = UUID().uuidString
+        let imagePath = getDocumentsDirectory().appendingPathComponent(imageName) // file extension is optional for JPEGs when using UIImage init
+
+        if let jpegData = image.jpegData(compressionQuality: 0.8) {
+            try? jpegData.write(to: imagePath)
+        }
+
+        #warning("Rewrite this flow to get a caption from user before making object")
+        // TODO: Evaluate if the suggested flow is feasible
+        let completion = { caption in
+            let photo = Photo(fileName: imageName, caption: "")
+        }
+
         // TODO: Add ability to caption the photo after it is saved
             // ability to add a VC dismissal completion block that displays a textfield alert to add the caption?
         // TODO: Save the photo URL to data model
@@ -80,8 +92,20 @@ extension HomeViewController: UIImagePickerControllerDelegate {
             // Could possibly be saved at the same time as the completed caption
     }
 
+    @objc func captionPhoto(completion: ((String) -> Void)?) {
+        let alert = UIAlertController(title: "Photo caption:", message: nil, preferredStyle: .alert)
+        alert.addTextField(configurationHandler: nil)
+
+        let action = UIAlertAction(title: "OK", style: .default) { _ in
+            if let text = alert.textFields?.first?.text {
+                if let completion = completion { completion(text) }
+            }
+        }
+    }
+
     fileprivate func presentImagePicker() {
         let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
         imagePicker.allowsEditing = false // FIXME: Should this be T or F?
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             imagePicker.sourceType = .camera

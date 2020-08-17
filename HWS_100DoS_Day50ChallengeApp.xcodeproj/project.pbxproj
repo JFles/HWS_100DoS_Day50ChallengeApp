@@ -15,6 +15,7 @@
 		604FFBAB24EAD04C00A5EF46 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 604FFBA924EAD04C00A5EF46 /* LaunchScreen.storyboard */; };
 		60665C7724EAD42C00A174B9 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60665C7624EAD42C00A174B9 /* DetailViewController.swift */; };
 		60665C7924EAF3BE00A174B9 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60665C7824EAF3BE00A174B9 /* Photo.swift */; };
+		60665C7C24EB2DC000A174B9 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60665C7B24EB2DC000A174B9 /* Helpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		604FFBAC24EAD04C00A5EF46 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		60665C7624EAD42C00A174B9 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		60665C7824EAF3BE00A174B9 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
+		60665C7B24EB2DC000A174B9 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 		604FFB9D24EAD04B00A5EF46 /* HWS_100DoS_Day50ChallengeApp */ = {
 			isa = PBXGroup;
 			children = (
+				60665C7A24EB2DAF00A174B9 /* Helpers */,
 				604FFBB224EAD12900A5EF46 /* Delegates */,
 				604FFBB524EAD16100A5EF46 /* Models */,
 				604FFBB424EAD15800A5EF46 /* Storyboards */,
@@ -103,6 +106,14 @@
 				60665C7824EAF3BE00A174B9 /* Photo.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		60665C7A24EB2DAF00A174B9 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				60665C7B24EB2DC000A174B9 /* Helpers.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -177,6 +188,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				604FFBA324EAD04B00A5EF46 /* HomeViewController.swift in Sources */,
+				60665C7C24EB2DC000A174B9 /* Helpers.swift in Sources */,
 				604FFB9F24EAD04B00A5EF46 /* AppDelegate.swift in Sources */,
 				604FFBA124EAD04B00A5EF46 /* SceneDelegate.swift in Sources */,
 				60665C7724EAD42C00A174B9 /* DetailViewController.swift in Sources */,
