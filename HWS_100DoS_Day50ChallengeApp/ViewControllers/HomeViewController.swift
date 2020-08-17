@@ -67,40 +67,41 @@ class HomeViewController: UITableViewController {
 // MARK: - ImagePicker methods
 extension HomeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        #warning("Implement")
-
         guard let image = info[.originalImage] as? UIImage else { return }
 
         let imageName = UUID().uuidString
-        let imagePath = getDocumentsDirectory().appendingPathComponent(imageName) // file extension is optional for JPEGs when using UIImage init
+        let imagePath = getDocumentsDirectory().appendingPathComponent(imageName)
 
         if let jpegData = image.jpegData(compressionQuality: 0.8) {
             try? jpegData.write(to: imagePath)
         }
 
-        #warning("Rewrite this flow to get a caption from user before making object")
-        // TODO: Evaluate if the suggested flow is feasible
-        let completion = { caption in
-            let photo = Photo(fileName: imageName, caption: "")
-        }
+        dismiss(animated: true) { [weak self] in
+            guard let strongSelf = self else { return }
 
-        // TODO: Add ability to caption the photo after it is saved
-            // ability to add a VC dismissal completion block that displays a textfield alert to add the caption?
-        // TODO: Save the photo URL to data model
-            // UIImagePickerController.InfoKey.imageURL
-            // Should this be handled as a completion of the alert?
-            // Could possibly be saved at the same time as the completed caption
+            strongSelf.captionPhoto() { (caption: String) in
+                let photo = Photo(fileName: imageName, caption: caption)
+                strongSelf.photos.append(photo)
+
+                let row = strongSelf.photos.endIndex - 1
+                let indexPath = IndexPath(row: row, section: 0)
+                strongSelf.tableView.insertRows(at: [indexPath], with: .automatic)
+                strongSelf.savePhotos()
+            }
+        }
     }
 
-    @objc func captionPhoto(completion: ((String) -> Void)?) {
+    func captionPhoto(_ completion: @escaping (String) -> Void) {
         let alert = UIAlertController(title: "Photo caption:", message: nil, preferredStyle: .alert)
         alert.addTextField(configurationHandler: nil)
 
         let action = UIAlertAction(title: "OK", style: .default) { _ in
-            if let text = alert.textFields?.first?.text {
-                if let completion = completion { completion(text) }
-            }
+            if let text = alert.textFields?.first?.text { completion(text) }
         }
+
+        alert.addAction(action)
+
+        present(alert, animated: true)
     }
 
     fileprivate func presentImagePicker() {
@@ -120,13 +121,13 @@ extension HomeViewController: UIImagePickerControllerDelegate, UINavigationContr
 // MARK: - TableView methods
 extension HomeViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        return photos.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Photo", for: indexPath)
 
-        cell.textLabel?.text = "Foo \(indexPath.row)"
+        cell.textLabel?.text = "\(photos[indexPath.row].caption)"
 
         return cell
     }
