@@ -10,21 +10,41 @@ import UIKit
 
 class DetailViewController: UIViewController {
 
+    var photo: Photo?
+
+    let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleToFill
+        imageView.clipsToBounds = true
+
+        return imageView
+    }()
+
+    override func loadView() {
+        super.loadView()
+
+        view.addSubview(imageView)
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: view.topAnchor),
+            imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        navigationItem.largeTitleDisplayMode = .never
+        
+        if let photo = photo {
+            title = photo.caption
+
+            let photoName = photo.fileName
+            let path = getDocumentsDirectory().appendingPathComponent(photoName)
+
+            imageView.image = UIImage(contentsOfFile: path.path)
+        }
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

@@ -10,6 +10,9 @@ import UIKit
 
 class HomeViewController: UITableViewController {
 
+    // TODO: Add deletion
+    // TODO: Add caption editing
+
     // MARK: - Properties
     var photos = [Photo]()
 
@@ -107,7 +110,7 @@ extension HomeViewController: UIImagePickerControllerDelegate, UINavigationContr
     fileprivate func presentImagePicker() {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
-        imagePicker.allowsEditing = false // FIXME: Should this be T or F?
+        imagePicker.allowsEditing = false
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             imagePicker.sourceType = .camera
         } else {
@@ -130,6 +133,12 @@ extension HomeViewController {
         cell.textLabel?.text = "\(photos[indexPath.row].caption)"
 
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let viewController = DetailViewController()
+        viewController.photo = photos[indexPath.row]
+        navigationController?.pushViewController(viewController, animated: true)
     }
 }
 
