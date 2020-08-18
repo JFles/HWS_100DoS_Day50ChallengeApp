@@ -32,6 +32,8 @@ class HomeViewController: UITableViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(takePicture))
+
+        navigationItem.leftBarButtonItem = editButtonItem
     }
 
     // MARK: - Selectors
@@ -139,6 +141,33 @@ extension HomeViewController {
         let viewController = DetailViewController()
         viewController.photo = photos[indexPath.row]
         navigationController?.pushViewController(viewController, animated: true)
+    }
+
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            #warning("Can the Data object be deleted from the user directory?")
+            photos.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            savePhotos()
+        } else if editingStyle == .insert {
+            captionPhoto() { [weak self] (caption: String) in
+                guard let strongSelf = self else { return }
+
+                strongSelf.photos[indexPath.row].caption = caption
+                tableView.reloadRows(at: [indexPath], with: .automatic)
+                strongSelf.savePhotos()
+
+                strongSelf.isEditing.toggle()
+            }
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        if isEditing {
+            return .insert
+        } else {
+            return .delete
+        }
     }
 }
 
